@@ -18,12 +18,12 @@ before_install:
   -yes | sdkmanager "platforms;android-28"
 
 deploy:
-  provider:
-    releasesapikey: $GITHUB_KEY
-    file: app/build/outputs/apk/release/app-release.apk
-    skip_cleanup: true
-    on:
-      tags: true
+  provider: releases
+  apikey: $GITHUB_KEY
+  file: app/build/outputs/apk/release/app-release.apk
+  skip_cleanup: true
+  on:
+    tags: true
 
 env:
   global:
