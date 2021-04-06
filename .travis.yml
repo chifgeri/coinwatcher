@@ -1,21 +1,21 @@
 language: android
 android:
   components:
-    - build-tooks-28.0.3
-    - android-28
+    - build-tools-31.0.0
+    - android-30
     - android-21
     - add-on
     - extra
-    - platrorm-tools
+    - platform-tools
     - tools
-    - extra-google-gppgleplayservices
+    - extra-google-googleplayservices
     - extra-google-m2repository
     - extra-android-m2repository
-    - addon-google_apis-google-28
+    - addon-google_apis-google-30
     - sys-img-armeabi-v7a-android-21
 
 before_install:
-  - yes | sdkmanager "platforms;android-28"
+  - yes | sdkmanager "platforms;android-30"
 
 deploy:
   provider: releases
