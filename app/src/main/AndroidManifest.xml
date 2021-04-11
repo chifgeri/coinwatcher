@@ -12,8 +12,7 @@
         android:theme="@style/Theme.CoinWatcher">
         <activity android:name=".views.AboutActivity"></activity>
         <activity android:name=".views.CurrencyPairDetailActivity" />
-        <activity android:name=".views.CurrencyListActivity" />
-        <activity android:name=".views.MainActivity">
+        <activity android:name=".views.CurrencyListActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
