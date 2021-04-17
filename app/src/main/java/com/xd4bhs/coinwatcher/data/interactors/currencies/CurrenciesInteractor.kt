@@ -1,44 +1,97 @@
 package com.xd4bhs.coinwatcher.data.interactors.currencies
 
-import android.util.Log
 import com.xd4bhs.coinwatcher.data.network.swagger.client.api.CoinsApi
 import com.xd4bhs.coinwatcher.data.network.swagger.client.api.SimpleApi
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.xd4bhs.coinwatcher.data.network.swagger.client.model.CurrencyAddRequest
+import com.xd4bhs.coinwatcher.data.network.swagger.client.model.CurrencyChartResponse
+import com.xd4bhs.coinwatcher.data.network.swagger.client.model.CurrencyEditRequest
+import com.xd4bhs.coinwatcher.data.network.swagger.client.model.CurrencyPairInfo
 import javax.inject.Inject
 
 class CurrenciesInteractor @Inject constructor(private var coinsApi: CoinsApi, private var simpleApi: SimpleApi) {
 
-    fun getVsCurrencies(){
-        var vsCurrencies = simpleApi.simpleSupportedVsCurrenciesGet()
+    fun getVsCurrencies(): List<String?> {
+       val vsCurrencies = simpleApi.simpleSupportedVsCurrenciesGet()
+       val response =  vsCurrencies?.execute()
 
-        vsCurrencies?.enqueue(
-                object : Callback<List<String?>?> {
-                    override fun onResponse(call: Call<List<String?>?>, response: Response<List<String?>?>) {
-                        if (response.code() == 200) {
-                            val response = response.body()!!
+        if(response?.code() == 200){
+            return response.body()!!
+        }
 
-                            for(str in response){
-                                Log.d("TAG", str!!)
-                            }
-                        }
-                    }
-
-                    override fun onFailure(call: Call<List<String?>?>, t: Throwable) {
-                        // TODO
-                    }
-                }
-        )
-    }
-  fun listCurrecnciesByCurrency(){
-        coinsApi.coinsMarketsGet("eur", null, null, null, null, null, null, null)
+        throw  Error("Failed to fetch the currencies")
     }
 
+    fun listCryptoCurrecnciesByCurrency(currency: String): List<CurrencyPairInfo?> {
+        val coinList = coinsApi.coinsMarketsGet(currency, ids = null, category = null, order = null, perPage = 50, page = 0, sparkline = null, priceChangePercentage = null)
+
+        val response =  coinList?.execute()
+
+        if(response?.code() == 200){
+          return response.body()!!
+        }
+
+        throw  Error("Failed to fetch the currency list")
+    }
+
+    // Its a big object with lot of keys
+    // The app extract the data which needed in the view model
+    fun getCurrencyById(id: String): Any {
+        val coinDetail = coinsApi.coinsIdGet(id = id, localization = null, tickers = true, marketData = true, communityData = false,developerData = false, sparkline = false)
+
+        val response =  coinDetail?.execute()
+
+        if(response?.code() == 200){
+            return response.body()!!
+        }
+
+        throw  Error("Failed to fetch the currency detail")
+    }
+
+    fun editCurrency(id: String, editRequest: CurrencyEditRequest): CurrencyPairInfo {
+        val coinDetail = coinsApi.coinsIdPut(id, editRequest)
+
+        val response =  coinDetail?.execute()
+
+        if(response?.code() == 200){
+            return response.body()!!
+        }
+
+        throw  Error("Failed to fetch the currency list")
+    }
+
+    fun deleteCurrency(id: String): Boolean {
+        val coinDetail = coinsApi.coinsIdDelete(id)
+
+        val response =  coinDetail?.execute()
+
+        if(response?.code() == 204){
+            return true
+        }
+        return false
+    }
+
+    fun addCurrencyPair(currencyAddRequest: CurrencyAddRequest): CurrencyPairInfo {
+        val addCoin = coinsApi.coinsPost(currencyAddRequest)
+
+        val response =  addCoin?.execute()
+
+        if(response?.code() == 201){
+            return response.body()!!
+        }
+
+        throw  Error("Failed to fetch the currency detail")
+    }
+
+    fun getCoinChartData(id: String, vsCurrency: String, days: Int): CurrencyChartResponse {
+        val getCoinChartData = coinsApi.coinsIdMarketChartGet(id = id, vsCurrency = vsCurrency, days = days.toString(), interval = null )
+
+        val response =  getCoinChartData?.execute()
+
+        if(response?.code() == 201){
+            return response.body()!!
+        }
+
+        throw  Error("Failed to fetch the currency detail")
+    }
 
 }

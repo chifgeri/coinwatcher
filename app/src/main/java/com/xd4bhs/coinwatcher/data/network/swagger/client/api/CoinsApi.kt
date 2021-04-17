@@ -9,12 +9,12 @@ interface CoinsApi {
      * Add new cryptourrency pair to the list. You have to add the currency and a vs currency
      *
      * @param currencyAddRequest Ticker of the coin
-     * @return Call<Void>
+     * @return Call<CurrencyPairInfo>
     </Void> */
     @POST("coins/")
     fun coinsPost(
             @Body currencyAddRequest: CurrencyAddRequest?
-    ): Call<Void?>?
+    ): Call<CurrencyPairInfo?>?
 
     /**
      * List all supported coins price, market cap, volume, and market related data
