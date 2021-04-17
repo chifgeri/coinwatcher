@@ -1,28 +1,21 @@
 package com.xd4bhs.coinwatcher.views
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.xd4bhs.coinwatcher.R
-import com.xd4bhs.coinwatcher.data.network.swagger.client.api.CoinsApi
+import com.xd4bhs.coinwatcher.data.interactors.currencies.CurrenciesInteractor
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Retrofit
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class CurrencyListActivity : AppCompatActivity() {
+    @Inject
+    lateinit var currencyInteractor: CurrenciesInteractor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val retrofit = Retrofit.Builder()
-                .baseUrl("api.coingecko.com/api/v3")
-                .build()
-
-        val service =  retrofit.create(CoinsApi::class.java)
-
-        val response = service.coinsMarketsGet("eur", null, null, null , null, null, null, null )
-
-        for(value in response.){
-            Log.d("TAG", value)
-        }
-
+        currencyInteractor.getVsCurrencies()
 
         setContentView(R.layout.activity_currency_list)
     }

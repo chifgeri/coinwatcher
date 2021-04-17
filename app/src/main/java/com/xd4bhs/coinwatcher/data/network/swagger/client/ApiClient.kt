@@ -31,6 +31,19 @@ class ApiClient() {
                 .addConverterFactory(GsonCustomConverterFactory.create(gson))
     }
 
+    fun createAdapterWitchCustomUrl(url: String){
+        val gson = GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                .create()
+        okClient = OkHttpClient()
+        var baseUrl = url
+        if (!baseUrl.endsWith("/")) baseUrl = "$baseUrl/"
+        adapterBuilder = Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .client(okClient)
+                .addConverterFactory(GsonCustomConverterFactory.create(gson))
+    }
+
     fun <S> createService(serviceClass: Class<S>?): S? {
         return adapterBuilder?.build()?.create(serviceClass)
     }
