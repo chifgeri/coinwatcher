@@ -1,22 +1,22 @@
 package com.xd4bhs.coinwatcher.data.database.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.xd4bhs.coinwatcher.data.database.entities.CurrencyPair
 
 @Dao
 interface CurrencyDAO{
     @Query("SELECT * FROM currency_pair")
-    fun getAllCurrencies() : List<CurrencyPair>
+    suspend fun getAllCurrencies() : List<CurrencyPair>
 
     @Query("SELECT * FROM currency_pair WHERE currency_pair.id = :currPairId")
-    fun getSpecificCurrencies(currPairId: String): List<CurrencyPair>
+    suspend fun getSpecificCurrency(currPairId: String): CurrencyPair
+
+    @Update
+    suspend fun updateCurrencyPair(currencyPair: CurrencyPair)
 
     @Insert
-    fun insertCurrencies(vararg currencyPairs: CurrencyPair)
-    
+    suspend fun insertCurrencies(vararg currencyPairs: CurrencyPair)
+
     @Delete
-    fun deleteGrade(currencyPair: CurrencyPair)
+    suspend fun deleteCurrency(currencyPair: CurrencyPair)
 }
