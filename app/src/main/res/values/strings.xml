@@ -11,4 +11,6 @@
     <string name="traging_volume">Traging volume</string>
     <string name="price_chart">Price chart:</string>
     <string name="delete_pair">Delete pair</string>
+    <string name="copyright">Copyright © CoinWatcher Inc.</string>
+    <string name="about">About</string>
 </resources>

@@ -3,6 +3,8 @@ package com.xd4bhs.coinwatcher.views
 import android.content.Intent
 import com.xd4bhs.coinwatcher.viewmodels.adapters.CurrencyRecyclerViewAdapter
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -34,6 +36,9 @@ class CurrencyListActivity : AppCompatActivity(), CoinPairDialogFragment.CoinPai
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_currency_list)
+
+        actionBar?.setHomeButtonEnabled(true)
+
         currencyListViewModel = ViewModelProviders.of(this).get(CurrencyPairListViewModel::class.java)
 
 
@@ -91,4 +96,20 @@ class CurrencyListActivity : AppCompatActivity(), CoinPairDialogFragment.CoinPai
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when( item.itemId){
+            R.id.action_about -> {
+                val intent = Intent(this, AboutActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
 }
