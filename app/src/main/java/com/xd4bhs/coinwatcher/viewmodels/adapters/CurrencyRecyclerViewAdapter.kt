@@ -1,4 +1,7 @@
+package com.xd4bhs.coinwatcher.viewmodels.adapters
+
 import android.app.Activity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.xd4bhs.coinwatcher.R
 import com.xd4bhs.coinwatcher.data.database.entities.CurrencyPair
 
-class RecyclerViewAdapter(context: Activity, currencyPairArrayList: ArrayList<CurrencyPair>) :
+class CurrencyRecyclerViewAdapter(context: Activity, currencyPairArrayList: ArrayList<CurrencyPair>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
     var context: Activity = context
     var currencyPairArrayList: ArrayList<CurrencyPair> = currencyPairArrayList
@@ -21,6 +24,7 @@ class RecyclerViewAdapter(context: Activity, currencyPairArrayList: ArrayList<Cu
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val currencyPair = currencyPairArrayList[position]
         val viewHolder = holder as RecyclerViewViewHolder
+        Log.d("ADAPTER", "Called")
         viewHolder.tvName.text = "${currencyPair.ticker}/${currencyPair.vsCurrency}"
         viewHolder.tvPrice.text = currencyPair.price.toString()
     }

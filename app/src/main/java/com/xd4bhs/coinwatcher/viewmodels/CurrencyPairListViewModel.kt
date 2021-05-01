@@ -1,34 +1,55 @@
 package com.xd4bhs.coinwatcher.viewmodels
 
+import android.content.Context
+import android.os.Debug
 import android.util.Log
-import androidx.lifecycle.LiveData
+import android.view.View
+import android.widget.AdapterView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.xd4bhs.coinwatcher.data.database.entities.CurrencyPair
 import com.xd4bhs.coinwatcher.data.interactors.currencies.CurrenciesInteractor
 import com.xd4bhs.coinwatcher.data.repositories.currencies.CurrencyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CurrencyPairListViewModel : ViewModel() {
-    @Inject
-    lateinit var currencyInteractor: CurrenciesInteractor
-
-    @Inject
-    lateinit var currencyRepository: CurrencyRepository
+class CurrencyPairListViewModel @Inject constructor(var currencyInteractor: CurrenciesInteractor, var currencyRepository: CurrencyRepository) :
+    ViewModel(), AdapterView.OnItemSelectedListener {
 
     val currencyPairList: MutableLiveData<ArrayList<CurrencyPair>> = MutableLiveData<ArrayList<CurrencyPair>>()
     val vsCurrencyList: MutableLiveData<List<String?>> = MutableLiveData<List<String?>>()
+    val selectedVsCurrency: MutableLiveData<String?> = MutableLiveData<String?>()
 
     fun queryVsCurrencyList(){
-        val vsCurrencies = currencyInteractor.getVsCurrencies()
-        vsCurrencyList.postValue(vsCurrencies)
+        viewModelScope.launch(Dispatchers.IO) {
+            val vsCurrencies = currencyInteractor.getVsCurrencies()
+            vsCurrencyList.postValue(vsCurrencies)
+        }
     }
 
     fun queryCurrencyPairList(vs: String){
-       val currs = currencyInteractor.listCryptoCurrecnciesByCurrency(currency = vs)
-       currencyPairList.postValue(ArrayList(currs));
+        viewModelScope.launch(Dispatchers.IO) {
+            val currs = currencyInteractor.listCryptoCurrecnciesByCurrency(currency = vs)
+            currencyPairList.postValue(ArrayList(currs))
+        }
+    }
+
+    fun addCurrency(ctx: Context, currency: CurrencyPair){
+        viewModelScope.launch(Dispatchers.IO) {
+            currencyRepository.saveCurrency(ctx=ctx, currencyPair = currency)
+        }
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        selectedVsCurrency.value = vsCurrencyList.value?.get(position)
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        selectedVsCurrency.value = null
     }
 
 
