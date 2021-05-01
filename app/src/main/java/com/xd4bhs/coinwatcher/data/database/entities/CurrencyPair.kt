@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "currency_pair")
 data class CurrencyPair(
-    @PrimaryKey val id: String?,
+    @PrimaryKey val id: String,
             val vsCurrency: String,
             val price: Double,
             val ticker: String,

@@ -1,5 +1,6 @@
 package com.xd4bhs.coinwatcher.views
 
+import android.content.Intent
 import com.xd4bhs.coinwatcher.viewmodels.adapters.CurrencyRecyclerViewAdapter
 import android.os.Bundle
 import android.view.View
@@ -18,8 +19,13 @@ import com.xd4bhs.coinwatcher.data.database.entities.CurrencyPair
 import com.xd4bhs.coinwatcher.viewmodels.CurrencyPairListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+const val COIN_ID = "COIN_ID"
+
+const val VS_CURR = "VS_CURR"
+
+
 @AndroidEntryPoint
-class CurrencyListActivity : AppCompatActivity(), CoinPairDialogFragment.CoinPairDialogListener {
+class CurrencyListActivity : AppCompatActivity(), CoinPairDialogFragment.CoinPairDialogListener, CurrencyRecyclerViewAdapter.CurrencyListListener {
 
     private var recyclerViewAdapter: CurrencyRecyclerViewAdapter? = null
     lateinit var currencyListViewModel: CurrencyPairListViewModel
@@ -45,7 +51,7 @@ class CurrencyListActivity : AppCompatActivity(), CoinPairDialogFragment.CoinPai
         currencyListViewModel.queryVsCurrencyList()
 
         currencyListViewModel.currencyPairList.observe(this, { list ->
-            recyclerViewAdapter = CurrencyRecyclerViewAdapter(this, list)
+            recyclerViewAdapter = CurrencyRecyclerViewAdapter(this, list, this)
             recyclerView.layoutManager = LinearLayoutManager(this)
             recyclerView.adapter = recyclerViewAdapter
             recyclerView.adapter?.notifyDataSetChanged()
@@ -58,7 +64,7 @@ class CurrencyListActivity : AppCompatActivity(), CoinPairDialogFragment.CoinPai
 
         currencyListViewModel.selectedVsCurrency.observe(this,  {
             if(it != null){
-                currencyListViewModel.queryCurrencyPairList(it)
+                currencyListViewModel.queryCurrencyPairList(ctx=this , vs = it)
             }
         })
     }
@@ -74,6 +80,15 @@ class CurrencyListActivity : AppCompatActivity(), CoinPairDialogFragment.CoinPai
     }
 
     override fun onDialogNegativeClick(dialog: DialogFragment) {
+    }
+
+    override fun onItemClick(currencyPair: CurrencyPair) {
+        val intent = Intent(this, CurrencyPairDetailActivity::class.java).apply {
+            putExtra(COIN_ID, currencyPair.id!!)
+            putExtra(VS_CURR, currencyPair.vsCurrency)
+        }
+        startActivity(intent)
+
     }
 
 }

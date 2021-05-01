@@ -44,9 +44,9 @@ class CoinPairDialogFragment(private val title: String, private val positiveIcon
                                 val price = editPrice.text.toString().toDouble()
                                 listener.onDialogPositiveClick(this,
                                 CurrencyPair(
-                                        id = null,
+                                        id = editTicker.text.toString(),
                                         vsCurrency = editVsCurr.text.toString(),
-                                        ticker = editTicker.text.toString(),
+                                        ticker = editTicker.text.toString().toUpperCase(),
                                         price = price,
                                         marketCap = editMarketCap.text.toString().toDouble(),
                                         totalVolume = price*1_000_000

@@ -16,6 +16,11 @@ class CurrencyRepository {
         return AppDatabase.getInstance(ctx).currencyDao().getSpecificCurrency(currId)
     }
 
+    suspend fun getSpecificCurrencyByVsCurr(vsCurr: String, ctx: Context): List<CurrencyPair>{
+
+        return AppDatabase.getInstance(ctx).currencyDao().getSpecificCurrencyByVsCurrency(vsCurr)
+    }
+
     suspend fun saveCurrency(currencyPair: CurrencyPair,ctx: Context){
         AppDatabase.getInstance(ctx).currencyDao().insertCurrencies(currencyPair)
     }
