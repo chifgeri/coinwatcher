@@ -31,19 +31,19 @@ class CurrencyPairListViewModel @Inject constructor(var currencyInteractor: Curr
         }
     }
 
-    fun queryCurrencyPairList(ctx: Context, vs: String){
+    fun queryCurrencyPairList( vs: String){
         viewModelScope.launch(Dispatchers.IO) {
             val currs = currencyInteractor.listCryptoCurrecnciesByCurrency(currency = vs)
-            val currs2 = currencyRepository.getSpecificCurrencyByVsCurr(vsCurr = vs, ctx = ctx)
+            val currs2 = currencyRepository.getSpecificCurrencyByVsCurr(vsCurr = vs)
             val array = ArrayList(currs2)
             array.addAll(currs)
             currencyPairList.postValue(array)
         }
     }
 
-    fun addCurrency(ctx: Context, currency: CurrencyPair){
+    fun addCurrency(currency: CurrencyPair){
         viewModelScope.launch(Dispatchers.IO) {
-            currencyRepository.saveCurrency(ctx=ctx, currencyPair = currency)
+            currencyRepository.saveCurrency(currencyPair = currency)
         }
     }
 

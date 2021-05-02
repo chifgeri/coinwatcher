@@ -1,12 +1,12 @@
 package com.xd4bhs.coinwatcher.data.repositories
 
-import com.xd4bhs.coinwatcher.data.interactors.currencies.CurrenciesInteractor
-import com.xd4bhs.coinwatcher.data.network.swagger.client.api.CoinsApi
-import com.xd4bhs.coinwatcher.data.network.swagger.client.api.SimpleApi
+import android.content.Context
+import com.xd4bhs.coinwatcher.data.database.AppDatabase
 import com.xd4bhs.coinwatcher.data.repositories.currencies.CurrencyRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -17,7 +17,7 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideCurrenciesRepository(): CurrencyRepository {
-        return CurrencyRepository()
+    fun provideCurrenciesRepository(@ApplicationContext context: Context): CurrencyRepository {
+        return CurrencyRepository(AppDatabase.getInstance(context))
     }
 }

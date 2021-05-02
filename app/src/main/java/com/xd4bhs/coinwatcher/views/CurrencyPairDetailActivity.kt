@@ -69,7 +69,7 @@ class CurrencyPairDetailActivity : AppCompatActivity() {
             }
         })
 
-        currencyViewModel.getCurrency(ctx = this, id = id!!, vsCurr = vsCurr!!)
+        currencyViewModel.getCurrency( id = id!!, vsCurr = vsCurr!!)
         currencyViewModel.getCurrencyChartData(id = id, vsCurr = vsCurr)
 
 

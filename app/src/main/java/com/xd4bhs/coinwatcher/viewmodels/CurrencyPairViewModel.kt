@@ -23,7 +23,7 @@ class CurrencyPairViewModel  @Inject constructor(var currencyInteractor: Currenc
         fun deleteCurrency(ctx: Context){
                 if(currencyPair.value != null && currencyPair.value?.id != null) {
                         viewModelScope.launch(Dispatchers.IO) {
-                                currencyRepository.deleteCurrency(ctx = ctx, currencyPair = currencyPair.value!!)
+                                currencyRepository.deleteCurrency( currencyPair = currencyPair.value!!)
                                 currencyPair.postValue(null)
                                 val act = ctx as Activity
                                 act.finish()
@@ -31,7 +31,7 @@ class CurrencyPairViewModel  @Inject constructor(var currencyInteractor: Currenc
                 }
         }
 
-        fun getCurrency(ctx: Context, id: String, vsCurr: String){
+        fun getCurrency(id: String, vsCurr: String){
                 viewModelScope.launch(Dispatchers.IO) {
                            try {
                               val coin =  currencyInteractor.getCurrencyByIdAndVsCurrency(vsCurrency = vsCurr, id = id)
@@ -40,7 +40,7 @@ class CurrencyPairViewModel  @Inject constructor(var currencyInteractor: Currenc
 
                               currencyPair.postValue(coin)
                            } catch (err: Throwable) {
-                               val coin = currencyRepository.getSpecificCurrency(currId = id, ctx=ctx)
+                               val coin = currencyRepository.getSpecificCurrency(currId = id)
                                currencyPair.postValue(coin)
                           }
                  }

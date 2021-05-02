@@ -69,7 +69,7 @@ class CurrencyListActivity : AppCompatActivity(), CoinPairDialogFragment.CoinPai
 
         currencyListViewModel.selectedVsCurrency.observe(this,  {
             if(it != null){
-                currencyListViewModel.queryCurrencyPairList(ctx=this , vs = it)
+                currencyListViewModel.queryCurrencyPairList(vs = it)
             }
         })
     }
@@ -81,7 +81,7 @@ class CurrencyListActivity : AppCompatActivity(), CoinPairDialogFragment.CoinPai
     }
 
     override fun onDialogPositiveClick(dialog: DialogFragment, coinPair: CurrencyPair) {
-        currencyListViewModel.addCurrency(this, coinPair)
+        currencyListViewModel.addCurrency(coinPair)
     }
 
     override fun onDialogNegativeClick(dialog: DialogFragment) {

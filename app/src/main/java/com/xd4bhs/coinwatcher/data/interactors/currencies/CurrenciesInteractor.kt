@@ -73,7 +73,6 @@ class CurrenciesInteractor @Inject constructor(private var coinsApi: CoinsApi, p
         val response =  coinDetail?.execute()
 
         if(response?.code() == 200){
-            Log.d("NETWORK:", response.body()?.marketData!!.toString())
             return convertToCurrencyPair(vsCurrency = vsCurrency, currencyPairData  = response.body()!!)
         }
 
@@ -97,7 +96,7 @@ class CurrenciesInteractor @Inject constructor(private var coinsApi: CoinsApi, p
 
         val response =  coinDetail?.execute()
 
-        if(response?.code() == 204){
+        if(response?.code() == 200){
             return true
         }
         return false
