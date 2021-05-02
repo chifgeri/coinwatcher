@@ -116,15 +116,21 @@ class CurrenciesInteractor @Inject constructor(private var coinsApi: CoinsApi, p
     }
 
     fun getCoinChartData(id: String, vsCurrency: String, days: Int): CurrencyChartResponse {
-        val getCoinChartData = coinsApi.coinsIdMarketChartGet(id = id, vsCurrency = vsCurrency, days = days.toString(), interval = null )
+        val getCoinChartData = coinsApi.coinsIdMarketChartGet(id = id, vsCurrency = vsCurrency, days = days.toString(), interval = "weekly" )
 
-        val response =  getCoinChartData?.execute()
+        try {
+            val response =  getCoinChartData?.execute()
 
-        if(response?.code() == 201){
+
+        if(response?.code() == 200){
             return response.body()!!
         }
+        } catch(e: Throwable){
+           Log.d("NETWORK", e.message!!)
+        }
 
-        throw  Error("Failed to fetch the currency detail")
+
+        throw  Error("Failed to fetch the currency chart data")
     }
 
 }
