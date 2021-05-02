@@ -1,54 +1,115 @@
 package com.xd4bhs.coinwatcher.views
 
+import android.content.Intent
+import com.xd4bhs.coinwatcher.viewmodels.adapters.CurrencyRecyclerViewAdapter
 import android.os.Bundle
-import android.util.Log
-
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.xd4bhs.coinwatcher.R
 import com.xd4bhs.coinwatcher.data.database.entities.CurrencyPair
-import com.xd4bhs.coinwatcher.data.interactors.currencies.CurrenciesInteractor
-import com.xd4bhs.coinwatcher.data.repositories.currencies.CurrencyRepository
+import com.xd4bhs.coinwatcher.viewmodels.CurrencyPairListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-import kotlinx.coroutines.launch
+const val COIN_ID = "COIN_ID"
 
-import javax.inject.Inject
-import kotlin.concurrent.thread
+const val VS_CURR = "VS_CURR"
+
 
 @AndroidEntryPoint
-class CurrencyListActivity : AppCompatActivity() {
-    @Inject
-    lateinit var currencyInteractor: CurrenciesInteractor
+class CurrencyListActivity : AppCompatActivity(), CoinPairDialogFragment.CoinPairDialogListener, CurrencyRecyclerViewAdapter.CurrencyListListener {
 
-    @Inject
-    lateinit var currencyRepository: CurrencyRepository
+    private var recyclerViewAdapter: CurrencyRecyclerViewAdapter? = null
+    lateinit var currencyListViewModel: CurrencyPairListViewModel
+    lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        thread {
-            val vsCurrencies = currencyInteractor.getVsCurrencies()
-            for (curr in vsCurrencies) {
-                Log.d("NETWORK CALL: ", curr!!)
+        setContentView(R.layout.activity_currency_list)
+
+        actionBar?.setHomeButtonEnabled(true)
+
+        currencyListViewModel = ViewModelProviders.of(this).get(CurrencyPairListViewModel::class.java)
+
+
+        recyclerView = findViewById(R.id.rvList)
+        val button: Button = findViewById(R.id.addButton)
+
+        button.setOnClickListener {
+            showAddFragment()
+        }
+
+        val spinner = findViewById<Spinner>(R.id.spinner)
+        
+        spinner.onItemSelectedListener = currencyListViewModel
+
+        currencyListViewModel.queryVsCurrencyList()
+
+        currencyListViewModel.currencyPairList.observe(this, { list ->
+            recyclerViewAdapter = CurrencyRecyclerViewAdapter(this, list, this)
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.adapter = recyclerViewAdapter
+            recyclerView.adapter?.notifyDataSetChanged()
+        })
+
+        currencyListViewModel.vsCurrencyList.observe(this,  {
+            list ->
+            spinner.adapter = ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, list)
+        })
+
+        currencyListViewModel.selectedVsCurrency.observe(this,  {
+            if(it != null){
+                currencyListViewModel.queryCurrencyPairList(vs = it)
+            }
+        })
+    }
+
+    private fun showAddFragment(){
+        val newFragment = CoinPairDialogFragment(positiveIconText = "Add", title = "Add new coin pair")
+        newFragment.show(supportFragmentManager, "coinPairAdd")
+
+    }
+
+    override fun onDialogPositiveClick(dialog: DialogFragment, coinPair: CurrencyPair) {
+        currencyListViewModel.addCurrency(coinPair)
+    }
+
+    override fun onDialogNegativeClick(dialog: DialogFragment) {
+    }
+
+    override fun onItemClick(currencyPair: CurrencyPair) {
+        val intent = Intent(this, CurrencyPairDetailActivity::class.java).apply {
+            putExtra(COIN_ID, currencyPair.id!!)
+            putExtra(VS_CURR, currencyPair.vsCurrency)
+        }
+        startActivity(intent)
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when( item.itemId){
+            R.id.action_about -> {
+                val intent = Intent(this, AboutActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
             }
         }
-
-       lifecycleScope.launch {
-            val curr = CurrencyPair(
-                    id="btc",
-                    vsCurrency = "EUR",
-                    price = 100_000.0,
-                    ticker = "BTC",
-                    marketCap= 100_000_000_000.0,
-                    totalVolume = 34001120.0,
-            )
-            currencyRepository.saveCurrency(ctx=this@CurrencyListActivity, currencyPair = curr)
-
-          val currencies =  currencyRepository.queryCurrencies(this@CurrencyListActivity)
-           for(curr in currencies) {
-               Log.d("DATABASE: ", curr.ticker)
-           }
-        }
-        setContentView(R.layout.activity_currency_list)
-    }
 }

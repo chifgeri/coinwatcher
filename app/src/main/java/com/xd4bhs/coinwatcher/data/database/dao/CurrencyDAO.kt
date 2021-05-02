@@ -11,6 +11,10 @@ interface CurrencyDAO{
     @Query("SELECT * FROM currency_pair WHERE currency_pair.id = :currPairId")
     suspend fun getSpecificCurrency(currPairId: String): CurrencyPair
 
+    @Query("SELECT * FROM currency_pair WHERE currency_pair.vsCurrency = :vsCurrName")
+    suspend fun getSpecificCurrencyByVsCurrency(vsCurrName: String): List<CurrencyPair>
+
+
     @Update
     suspend fun updateCurrencyPair(currencyPair: CurrencyPair)
 

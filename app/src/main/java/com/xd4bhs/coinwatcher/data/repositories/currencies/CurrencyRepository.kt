@@ -4,28 +4,33 @@ import android.content.Context
 import com.xd4bhs.coinwatcher.data.database.AppDatabase
 import com.xd4bhs.coinwatcher.data.database.entities.CurrencyPair
 
-class CurrencyRepository {
+class CurrencyRepository(private val appDatabase: AppDatabase) {
 
-    suspend fun queryCurrencies(ctx: Context): List<CurrencyPair>{
+    suspend fun queryCurrencies(): List<CurrencyPair>{
 
-        return AppDatabase.getInstance(ctx).currencyDao().getAllCurrencies()
+        return appDatabase.currencyDao().getAllCurrencies()
     }
 
-    suspend fun getSpecificCurrency(currId: String, ctx: Context): CurrencyPair{
+    suspend fun getSpecificCurrency(currId: String): CurrencyPair{
 
-        return AppDatabase.getInstance(ctx).currencyDao().getSpecificCurrency(currId)
+        return appDatabase.currencyDao().getSpecificCurrency(currId)
     }
 
-    suspend fun saveCurrency(currencyPair: CurrencyPair,ctx: Context){
-        AppDatabase.getInstance(ctx).currencyDao().insertCurrencies(currencyPair)
+    suspend fun getSpecificCurrencyByVsCurr(vsCurr: String): List<CurrencyPair>{
+
+        return appDatabase.currencyDao().getSpecificCurrencyByVsCurrency(vsCurr)
     }
 
-    suspend fun updateCurrency(currencyPair: CurrencyPair,ctx: Context){
-        AppDatabase.getInstance(ctx).currencyDao().updateCurrencyPair(currencyPair)
+    suspend fun saveCurrency(currencyPair: CurrencyPair){
+        appDatabase.currencyDao().insertCurrencies(currencyPair)
     }
 
-    suspend fun deleteCurrency(ctx: Context, currencyPair: CurrencyPair){
-        AppDatabase.getInstance(ctx).currencyDao().deleteCurrency(currencyPair)
+    suspend fun updateCurrency(currencyPair: CurrencyPair){
+        appDatabase.currencyDao().updateCurrencyPair(currencyPair)
+    }
+
+    suspend fun deleteCurrency(currencyPair: CurrencyPair){
+        appDatabase.currencyDao().deleteCurrency(currencyPair)
     }
 
 

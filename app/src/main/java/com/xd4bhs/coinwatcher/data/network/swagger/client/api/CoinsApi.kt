@@ -49,7 +49,7 @@ interface CoinsApi {
     @GET("coins/{id}")
     fun coinsIdGet(
             @Path("id") id: String?, @Query("localization") localization: String?, @Query("tickers") tickers: Boolean?, @Query("market_data") marketData: Boolean?, @Query("community_data") communityData: Boolean?, @Query("developer_data") developerData: Boolean?, @Query("sparkline") sparkline: Boolean?
-    ): Call<InlineResponse200?>?
+    ): Call<CurrencyPairData?>?
 
     /**
      * Edit the cryptourrency pair.
