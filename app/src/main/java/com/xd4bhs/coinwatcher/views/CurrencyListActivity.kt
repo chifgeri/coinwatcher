@@ -16,6 +16,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.xd4bhs.coinwatcher.R
 import com.xd4bhs.coinwatcher.data.database.entities.CurrencyPair
 import com.xd4bhs.coinwatcher.viewmodels.CurrencyPairListViewModel
@@ -33,11 +36,17 @@ class CurrencyListActivity : AppCompatActivity(), CoinPairDialogFragment.CoinPai
     lateinit var currencyListViewModel: CurrencyPairListViewModel
     lateinit var recyclerView: RecyclerView
 
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_currency_list)
 
         actionBar?.setHomeButtonEnabled(true)
+
+        firebaseAnalytics = Firebase.analytics
+
+        firebaseAnalytics.setAnalyticsCollectionEnabled(true)
 
         currencyListViewModel = ViewModelProviders.of(this).get(CurrencyPairListViewModel::class.java)
 
@@ -88,6 +97,9 @@ class CurrencyListActivity : AppCompatActivity(), CoinPairDialogFragment.CoinPai
     }
 
     override fun onItemClick(currencyPair: CurrencyPair) {
+        if(currencyPair.id == "crash"){
+            throw Error("Crash clicked!")
+        }
         val intent = Intent(this, CurrencyPairDetailActivity::class.java).apply {
             putExtra(COIN_ID, currencyPair.id!!)
             putExtra(VS_CURR, currencyPair.vsCurrency)

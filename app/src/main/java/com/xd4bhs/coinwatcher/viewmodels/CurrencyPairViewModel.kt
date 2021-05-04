@@ -35,9 +35,6 @@ class CurrencyPairViewModel  @Inject constructor(var currencyInteractor: Currenc
                 viewModelScope.launch(Dispatchers.IO) {
                            try {
                               val coin =  currencyInteractor.getCurrencyByIdAndVsCurrency(vsCurrency = vsCurr, id = id)
-                               Log.d("NETWORK: ", coin.id)
-
-
                               currencyPair.postValue(coin)
                            } catch (err: Throwable) {
                                val coin = currencyRepository.getSpecificCurrency(currId = id)
