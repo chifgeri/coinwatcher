@@ -5,14 +5,11 @@ import com.xd4bhs.coinwatcher.viewmodels.adapters.CurrencyRecyclerViewAdapter
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -88,6 +85,9 @@ class CurrencyListActivity : AppCompatActivity(), CoinPairDialogFragment.CoinPai
     }
 
     override fun onItemClick(currencyPair: CurrencyPair) {
+        if(currencyPair.id == "crash"){
+            throw Error("Crash clicked!")
+        }
         val intent = Intent(this, CurrencyPairDetailActivity::class.java).apply {
             putExtra(COIN_ID, currencyPair.id!!)
             putExtra(VS_CURR, currencyPair.vsCurrency)
