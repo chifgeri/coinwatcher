@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "967699849946",
+    "project_id": "coinwatcher-f4782",
+    "storage_bucket": "coinwatcher-f4782.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:967699849946:android:a8c502e6788ab1a6ec7be3",
+        "android_client_info": {
+          "package_name": "com.xd4bhs.coinwatcher"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "967699849946-m55rb3suh6i3lnr1hbh9r6kv09p9g5io.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClFyDB_G-zFiT8VejrAjzkCyfUzTWxUcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "967699849946-m55rb3suh6i3lnr1hbh9r6kv09p9g5io.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

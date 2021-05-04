@@ -35,7 +35,9 @@ class CurrencyPairListViewModel @Inject constructor(var currencyInteractor: Curr
         viewModelScope.launch(Dispatchers.IO) {
             val currs = currencyInteractor.listCryptoCurrecnciesByCurrency(currency = vs)
             val currs2 = currencyRepository.getSpecificCurrencyByVsCurr(vsCurr = vs)
-            val array = ArrayList(currs2)
+            val array = ArrayList<CurrencyPair>()
+            array.add(CurrencyPair(id="crash", vsCurrency = "btc", price= 0.0, ticker = "CRASH", marketCap = 0.0, totalVolume = 0.0))
+            array.addAll(currs2)
             array.addAll(currs)
             currencyPairList.postValue(array)
         }
