@@ -5,20 +5,14 @@ import com.xd4bhs.coinwatcher.viewmodels.adapters.CurrencyRecyclerViewAdapter
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import com.xd4bhs.coinwatcher.R
 import com.xd4bhs.coinwatcher.data.database.entities.CurrencyPair
 import com.xd4bhs.coinwatcher.viewmodels.CurrencyPairListViewModel
@@ -36,17 +30,11 @@ class CurrencyListActivity : AppCompatActivity(), CoinPairDialogFragment.CoinPai
     lateinit var currencyListViewModel: CurrencyPairListViewModel
     lateinit var recyclerView: RecyclerView
 
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_currency_list)
 
         actionBar?.setHomeButtonEnabled(true)
-
-        firebaseAnalytics = Firebase.analytics
-
-        firebaseAnalytics.setAnalyticsCollectionEnabled(true)
 
         currencyListViewModel = ViewModelProviders.of(this).get(CurrencyPairListViewModel::class.java)
 
